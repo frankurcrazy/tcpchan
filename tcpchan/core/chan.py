@@ -37,6 +37,8 @@ class Channel:
         return self._conn
 
     def channel_created(self):
+        """ Called when channel is created
+        """
         self._logger.debug(f"Channel {self._channel_id} is created.")
 
     def write_data(self, data):
@@ -52,10 +54,17 @@ class Channel:
         self._conn.channel_transmit_data(self._channel_id, data)
 
     def data_received(self, data):
+        """ Called on reception of data
+            
+            Arguments:
+                data (bytes): received data
+        """
         raise NotImplementedError
 
     @property
     def is_closed(self):
+        """ Tell whether channel is close or not
+        """
         return self._closed
 
     def close(self):

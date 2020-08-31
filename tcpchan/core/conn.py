@@ -3,21 +3,11 @@ from io import BytesIO
 from random import randint
 
 from tcpchan.core.chan import Channel
-from tcpchan.core.evt import (
-    ChannelClosed,
-    ChannelCreated,
-    DataTransmit,
-    HandshakeFailed,
-    HandshakeSuccess,
-)
-from tcpchan.core.msg import (
-    ChannelPayload,
-    CloseChannelRequest,
-    CreateChannelRequest,
-    HandshakeReply,
-    HandshakeRequest,
-    TCPChanMessage,
-)
+from tcpchan.core.evt import (ChannelClosed, ChannelCreated, DataTransmit,
+                              HandshakeFailed, HandshakeSuccess)
+from tcpchan.core.msg import (ChannelPayload, CloseChannelRequest,
+                              CreateChannelRequest, HandshakeReply,
+                              HandshakeRequest, TCPChanMessage)
 
 CONN_STATE_IDLE = 0
 CONN_STATE_SETUP = 1
@@ -89,7 +79,7 @@ class Connection(BaseConnection):
             handshake_magic (int): Magic number to use during handshake
     """
 
-    def __init__(self, channel_cls, *arg, **kwargs):
+    def __init__(self, channel_cls, handshake_magic=HANDSHAKE_MAGIC, *arg, **kwargs):
         super().__init__(*arg, **kwargs)
 
         self._handlers = {
@@ -101,7 +91,7 @@ class Connection(BaseConnection):
         }
 
         self._channel_cls = channel_cls
-        self._magic = kwargs.get("handshake_magic", HANDSHAKE_MAGIC)
+        self._magic = handshake_magic
 
     def connection_established(self):
         """ Called on connection establishment
@@ -200,9 +190,16 @@ class Connection(BaseConnection):
     def _handle_handshake_request(self, msg):
         self._logger.debug("handling handshake request.")
 
-        self._state = CONN_STATE_HANDSHAKE
+        if msg.Magic != self._magic:
+            self._logger.debug("handshake failed due to mismatched magic.")
+            self._state = CONN_STATE_HANDSHAKE_FAIL
+            self._events.append(HandshakeFailed(reason="Mismatched magic."))
+            return
+
+        self._logger.debug("handshake succeeded, sending reply.")
         msg = HandshakeReply(Magic=self._magic)
         self._events.append(DataTransmit(payload=msg.pack()))
+        self._events.append(HandshakeSuccess())
         self._state = CONN_STATE_HANDSHAKE_SUCCESS
 
     def _handle_handshake_reply(self, msg):
@@ -213,9 +210,9 @@ class Connection(BaseConnection):
             self._state = CONN_STATE_HANDSHAKE_SUCCESS
             evt = HandshakeSuccess()
         else:
-            self._logger.debug("hanshake failed.")
+            self._logger.debug("handshake failed due to mismatched magic.")
             self._state = CONN_STATE_HANDSHAKE_FAIL
-            evt = HandshakeFailed(reason="Invalid magic.")
+            evt = HandshakeFailed(reason="Mismatched magic.")
 
         self._events.append(evt)
 
@@ -223,9 +220,15 @@ class Connection(BaseConnection):
 class ClientConnection(Connection):
     def connection_established(self):
         super().connection_established()
-        msg = HandshakeRequest()
+        msg = HandshakeRequest(Magic=self._magic)
         self._events.append(DataTransmit(payload=msg.pack()))
         self._state = CONN_STATE_HANDSHAKE
 
 
-__all__ = ["Connection"]
+class ServerConnection(Connection):
+    def connection_established(self):
+        super().connection_established()
+        self._state = CONN_STATE_HANDSHAKE
+
+
+__all__ = ["Connection", "ClientConnection", "ServerConnection"]

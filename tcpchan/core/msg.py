@@ -46,7 +46,9 @@ class TCPChanMessage(BaseTCPChanMessage):
 
 class HandshakeRequest(BaseTCPChanMessage):
     opcode = TCPCHAN_OP_HANDSHAKE_REQUEST
-    Fields = TCPChanMessage.Fields
+    Fields = TCPChanMessage.Fields + [
+        field_factory("Magic", Uint32),
+    ]
 
 
 class HandshakeReply(BaseTCPChanMessage):
