@@ -13,7 +13,7 @@ class Channel:
             logger (logging.Logger): the logger
     """
 
-    def __init__(self, connection, channel_id=0, logger=None):
+    def __init__(self, connection=None, channel_id=0, logger=None):
         self._channel_id = channel_id
         self._conn = connection
         self._closed = False
@@ -35,6 +35,16 @@ class Channel:
         """ Get the associated TCPChan connection
         """
         return self._conn
+
+    def set_connection(self, connection):
+        """ Associate the channel with given connection
+        """
+        self._conn = connection
+
+    def set_channel_id(self, channel_id):
+        """ Set the id of the channel
+        """
+        self._channel_id = channel_id
 
     def channel_created(self):
         """ Called when channel is created

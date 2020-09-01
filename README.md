@@ -27,20 +27,20 @@ class CustomChannel(Channel):
 ```
 
 #### Connection
-Create `ServerConnection` or `ClientConnection` instance upon connection establishment in server/client. And pass the channel type to the Connection.
+Create `ServerConnection` or `ClientConnection` instance upon connection establishment in server/client. And pass the channel factory to the Connection.
 
 ##### Server connection creation
 ```python
 from tcpchan.core.conn import ServerConnection
 
-conn = ServerConnection(CustomChannel)
+conn = ServerConnection(lambda: CustomChannel())
 ```
 
 ##### Client connection creation
 ```python
 from tcpchan.core.conn import ClientConnection
 
-conn = ClientConnection(CustomChannel)
+conn = ClientConnection(lambda: CustomChannel())
 ```
 
 #### Events

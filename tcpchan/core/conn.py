@@ -93,11 +93,13 @@ class Connection(BaseConnection):
     """ TCPChan connection
 
         Attributes:
-            channel_cls (type): Channel type to use during channel creation
+            channel_factory (callable): Factory function for channel creation.
             handshake_magic (int): Magic number to use during handshake
     """
 
-    def __init__(self, channel_cls, handshake_magic=HANDSHAKE_MAGIC, *arg, **kwargs):
+    def __init__(
+        self, channel_factory, handshake_magic=HANDSHAKE_MAGIC, *arg, **kwargs
+    ):
         super().__init__(*arg, **kwargs)
 
         self._handlers = {
@@ -108,8 +110,11 @@ class Connection(BaseConnection):
             HandshakeReply: self._handle_handshake_reply,
         }
 
-        self._channel_cls = channel_cls
         self._magic = handshake_magic
+
+        self._channel_factory = channel_factory
+        if not callable(self._channel_factory):
+            raise ValueError("channel_factory must be callable.")
 
     def connection_established(self):
         """ Called on connection establishment
@@ -171,7 +176,9 @@ class Connection(BaseConnection):
         if channel_id in self._channels:
             raise Exception(f"Duplicated channel id {channel_id}.")
 
-        new_channel = self._channel_cls(self, channel_id=channel_id)
+        new_channel = self._channel_factory()
+        new_channel.set_channel_id(channel_id)
+        new_channel.set_connection(self)
         new_channel.channel_created()
         self._channels[channel_id] = new_channel
 

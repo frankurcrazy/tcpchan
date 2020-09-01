@@ -30,12 +30,12 @@ class TestTCPChanConnection(unittest.TestCase):
 
     def test_create_connection(self):
         try:
-            conn = Connection(Channel)
+            conn = Connection(lambda: Channel())
         except Exception:
             self.fail("Failed creating connection instance with builtin channel.")
 
     def test_create_channel(self):
-        conn = Connection(Channel)
+        conn = Connection(lambda: Channel())
         conn.connection_established()
 
         # CreateChanelRequest
@@ -49,7 +49,7 @@ class TestTCPChanConnection(unittest.TestCase):
         self.assertEqual(ev.channel.channel_id, 1234)
 
     def test_create_duplicated_channel(self):
-        conn = Connection(Channel)
+        conn = Connection(lambda: Channel())
         conn.connection_established()
 
         # CreateChannelRequest
@@ -60,7 +60,7 @@ class TestTCPChanConnection(unittest.TestCase):
             conn.data_received(msg.pack())
 
     def test_close_channel_passive(self):
-        conn = Connection(Channel)
+        conn = Connection(lambda: Channel())
         conn.connection_established()
 
         # CreateChannelRequest
@@ -101,8 +101,8 @@ class TestTCPChanServerClientConnection(unittest.TestCase):
         )
 
     def test_create_connection(self):
-        server_conn = ServerConnection(Channel)
-        client_conn = ClientConnection(Channel)
+        server_conn = ServerConnection(lambda: Channel())
+        client_conn = ClientConnection(lambda: Channel())
 
         server_conn.connection_established()
         client_conn.connection_established()
@@ -132,8 +132,8 @@ class TestTCPChanServerClientConnection(unittest.TestCase):
         self.assertEqual(type(ev), HandshakeSuccess)
 
     def test_create_connection_handshake_failed(self):
-        server_conn = ServerConnection(Channel, handshake_magic=0x12341234)
-        client_conn = ClientConnection(Channel)
+        server_conn = ServerConnection(lambda: Channel(), handshake_magic=0x12341234)
+        client_conn = ClientConnection(lambda: Channel())
 
         server_conn.connection_established()
         client_conn.connection_established()
