@@ -139,9 +139,7 @@ class Connection(BaseConnection):
             try:
                 self._handlers[msg.__class__](msg)
             except KeyError:
-                self._logger.error(
-                    f'Unhandled message type "{msg.__class__.__name__}".'
-                )
+                self._logger.error('Unhandled message type "%s".', type(msg).__name__)
                 self.close()
 
             offset += processed
@@ -155,7 +153,7 @@ class Connection(BaseConnection):
         payload = ChannelPayload(Channel=channel_id, Payload=data)
 
         self.add_events([DataTransmit(payload=payload.pack())])
-        self._logger.debug(f"Scheduled data transmission from channel {channel_id}.")
+        self._logger.debug("Scheduled data transmission from channel %d.", channel_id)
 
     def get_channel(self, channel_id):
         return self._channels.get(channel_id, None)
@@ -204,7 +202,7 @@ class Connection(BaseConnection):
             channel.close()
             return True
         except KeyError:
-            self._logger.error(f"Deleting a non-existed channel {channel_id}.")
+            self._logger.error("Deleting a non-existed channel %d.", channel_id)
             return False
 
     def _handle_create_channel_request(self, msg):
@@ -220,7 +218,7 @@ class Connection(BaseConnection):
         try:
             self._channels[msg.Channel].data_received(msg.Payload)
         except KeyError:
-            self._logger.error(f"Non-existed channel {msg.Channel}.")
+            self._logger.error("Non-existed channel %d.", msg.Channel)
 
     def _handle_handshake_request(self, msg):
         self._logger.debug("handling handshake request.")

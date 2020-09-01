@@ -49,7 +49,7 @@ class Channel:
     def channel_created(self):
         """ Called when channel is created
         """
-        self._logger.debug(f"Channel {self._channel_id} is created.")
+        self._logger.debug("Channel %d is created.", self._channel_id)
 
     def write_data(self, data):
         """ Send channel data to connection
