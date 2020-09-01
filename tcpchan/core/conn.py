@@ -23,11 +23,15 @@ class BaseConnection:
     """ Base class for connection
     """
 
-    def __init__(self, logger=None):
+    def __init__(self, logger=None, event_callback=None):
         self._channels = {}
         self._buf = BytesIO()
         self._events = []
         self._state = CONN_STATE_IDLE
+        self._event_callback = event_callback
+
+        if self._event_callback and not callable(self._event_callback):
+            raise ValueError("Expect callable event_callback.")
 
         if logger is not None:
             self._logger = logger
@@ -47,7 +51,7 @@ class BaseConnection:
         """
         raise NotImplementedError
 
-    def create_channel(self, channel_id=0):
+    def create_channel(self, channel_id=None):
         raise NotImplementedError
 
     def close_channel(self, channel_id=0):
@@ -62,10 +66,24 @@ class BaseConnection:
         raise NotImplementedError
 
     def next_event(self):
+        """ Get next event from event queue
+        """
         try:
             return self._events.pop(0)
         except IndexError:
             return None
+
+    def add_events(self, events=[]):
+        """ Add a list of events to event queue
+        """
+        self._events += events
+        self.event_notify()
+
+    def event_notify(self):
+        """ Called when event is enqueued
+        """
+        if self._event_callback:
+            self._event_callback()
 
     def close(self):
         raise NotImplementedError
@@ -129,17 +147,23 @@ class Connection(BaseConnection):
             self._buf = newbuf
 
     def channel_transmit_data(self, channel_id, data):
-        self._events.append(DataTransmit(Channel=channel_id, Payload=data))
+        payload = ChannelPayload(Channel=channel_id, Payload=data)
+
+        self.add_events([DataTransmit(payload=payload.pack())])
         self._logger.debug(f"Scheduled data transmission from channel {channel_id}.")
 
     def get_channel(self, channel_id):
         return self._channels.get(channel_id, None)
 
-    def create_channel(self):
-        channel_id = randint(2 ** 32)
+    def create_channel(self, channel_id=None):
+        if not channel_id:
+            channel_id = randint(0, 2 ** 32)
 
         while channel_id in self._channels:
             channel_id += 1
+
+        msg = CreateChannelRequest(Channel=channel_id)
+        self.add_events([DataTransmit(payload=msg.pack())])
 
         return self._create_channel(channel_id)
 
@@ -151,15 +175,19 @@ class Connection(BaseConnection):
         new_channel.channel_created()
         self._channels[channel_id] = new_channel
 
-        self._events.append(ChannelCreated(channel_id=channel_id, channel=new_channel))
+        self.add_events([ChannelCreated(channel_id=channel_id, channel=new_channel)])
 
         return new_channel
 
     def close_channel(self, channel_id):
         if self._delete_channel(channel_id):
             msg = CloseChannelRequest(Channel=channel_id)
-            self._events.append(DataTransmit(payload=msg.pack()))
-            self._events.append(ChannelClosed(channel_id=channel_id))
+            self.add_events(
+                [
+                    DataTransmit(payload=msg.pack()),
+                    ChannelClosed(channel_id=channel_id),
+                ]
+            )
 
     def _delete_channel(self, channel_id):
         try:
@@ -193,13 +221,14 @@ class Connection(BaseConnection):
         if msg.Magic != self._magic:
             self._logger.debug("handshake failed due to mismatched magic.")
             self._state = CONN_STATE_HANDSHAKE_FAIL
-            self._events.append(HandshakeFailed(reason="Mismatched magic."))
+            self.add_events([HandshakeFailed(reason="Mismatched magic.")])
             return
 
         self._logger.debug("handshake succeeded, sending reply.")
         msg = HandshakeReply(Magic=self._magic)
-        self._events.append(DataTransmit(payload=msg.pack()))
-        self._events.append(HandshakeSuccess())
+        self.add_events(
+            [DataTransmit(payload=msg.pack()), HandshakeSuccess(),]
+        )
         self._state = CONN_STATE_HANDSHAKE_SUCCESS
 
     def _handle_handshake_reply(self, msg):
@@ -214,14 +243,14 @@ class Connection(BaseConnection):
             self._state = CONN_STATE_HANDSHAKE_FAIL
             evt = HandshakeFailed(reason="Mismatched magic.")
 
-        self._events.append(evt)
+        self.add_events([evt])
 
 
 class ClientConnection(Connection):
     def connection_established(self):
         super().connection_established()
         msg = HandshakeRequest(Magic=self._magic)
-        self._events.append(DataTransmit(payload=msg.pack()))
+        self.add_events([DataTransmit(payload=msg.pack())])
         self._state = CONN_STATE_HANDSHAKE
 
 
