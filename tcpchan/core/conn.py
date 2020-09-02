@@ -97,9 +97,7 @@ class Connection(BaseConnection):
             handshake_magic (int): Magic number to use during handshake
     """
 
-    def __init__(
-        self, channel_factory, handshake_magic=HANDSHAKE_MAGIC, *arg, **kwargs
-    ):
+    def __init__(self, channel_factory, handshake_magic=None, *arg, **kwargs):
         super().__init__(*arg, **kwargs)
 
         self._handlers = {
@@ -110,7 +108,10 @@ class Connection(BaseConnection):
             HandshakeReply: self._handle_handshake_reply,
         }
 
-        self._magic = handshake_magic
+        if handshake_magic is None:
+            self._magic = HANDSHAKE_MAGIC
+        else:
+            self._magic = handshake_magic
 
         self._channel_factory = channel_factory
         if not callable(self._channel_factory):
