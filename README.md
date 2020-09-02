@@ -1,6 +1,8 @@
 TCPChan
 ====
 
+[![PyPI version](https://badge.fury.io/py/tcpchan.svg)](https://badge.fury.io/py/tcpchan)
+
 ***TCPChan*** is a TCP connection multiplexing library that enables working with multiple *channels* in a single TCP connection. TCPChan can boost the efficiency of the short-lived connections by eliminating the overhead of connection setup, especially in high-latency links (e.g. cross-continental links).
 
 The core part of the library is decoupled from I/O libraries so it's possible to bring your own I/O library. For convenience, an Asyncio-based protocol implementation is provided for easy integration with Asyncio applications.
@@ -11,7 +13,16 @@ Warning: TCPChan is built for fun and educational purpose, it is not fully teste
 WIP
 
 ### Installation
-WIP
+#### Install via Pip
+```bash
+pip install tcpchan
+```
+
+#### Install latest version from GitHub
+```basb
+git clone --depth 1 https://github.com/frankurcrazy/tcpchan
+cd tcpchan; python setup.py install
+```
 
 #### Dependencies
 1. python >= 3.7
