@@ -5,7 +5,7 @@ import logging
 
 from tcpchan.core.conn import ClientConnection, ServerConnection
 from tcpchan.core.evt import (ChannelClosed, ChannelCreated, DataTransmit,
-                        HandshakeFailed, HandshakeSuccess)
+                              HandshakeFailed, HandshakeSuccess)
 
 
 class TCPChanBaseProtocol(asyncio.Protocol):
@@ -127,7 +127,7 @@ class TCPChanServerProtocol(TCPChanBaseProtocol):
 
 
 class TCPChanClientProtocol(TCPChanBaseProtocol):
-    """ TCPChan Server Protocol
+    """ TCPChan Client Protocol
 
         TCPChan protocol for client side.
 

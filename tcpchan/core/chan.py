@@ -8,9 +8,9 @@ class Channel:
         channels in TCPChan connection.
 
         Attributes:
-            connection (TCPChan.core.Connection): the associated TCPChan connection
-            channel_id (int): the channel id
-            logger (logging.Logger): the logger
+            connection (TCPChan.core.Connection): associated TCPChan connection
+            channel_id (int): id of the channel
+            logger (logging.Logger): logging utility
     """
 
     def __init__(self, connection=None, channel_id=0, logger=None):
@@ -25,15 +25,10 @@ class Channel:
 
     @property
     def channel_id(self):
-        """ Get the ID of the channel
-        """
-
         return self._channel_id
 
     @property
     def connection(self):
-        """ Get the associated TCPChan connection
-        """
         return self._conn
 
     def set_connection(self, connection):
