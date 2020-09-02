@@ -3,8 +3,8 @@
 import asyncio
 import logging
 
-from ..core.conn import ClientConnection, ServerConnection
-from ..core.evt import (ChannelClosed, ChannelCreated, DataTransmit,
+from tcpchan.core.conn import ClientConnection, ServerConnection
+from tcpchan.core.evt import (ChannelClosed, ChannelCreated, DataTransmit,
                         HandshakeFailed, HandshakeSuccess)
 
 

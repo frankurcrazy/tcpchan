@@ -73,7 +73,7 @@ For server-side application, `TCPChanServerProtocol` can be used, likewise, for 
 
 ```python
 import asyncio
-from tcpchan.asyncio import TCPChanServerProtocol
+from tcpchan.aio import TCPChanServerProtocol
 from tcpchan.core.chan import Channel
 
 
