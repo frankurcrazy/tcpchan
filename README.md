@@ -5,6 +5,8 @@ TCPChan
 
 The core part of the library is decoupled from I/O libraries so it's possible to bring your own I/O library. For convenience, an Asyncio-based protocol implementation is provided for easy integration with Asyncio applications.
 
+Warning: TCPChan is built for fun and educational purpose, it is not fully tested, and neither is it widely deployed. Use it at your own risk.
+
 ## Guide
 WIP
 
