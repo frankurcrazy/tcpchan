@@ -47,7 +47,7 @@ conn = ClientConnection(lambda: CustomChannel())
 
 #### Events
 ```python
-from tcpchan.core imoprt (
+from tcpchan.core import (
     HandshakeSuccess, DataTransmit,
     ChannelCreated, ChannelClosed
 )
