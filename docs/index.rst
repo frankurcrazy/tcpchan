@@ -1,0 +1,29 @@
+.. TCPChan documentation master file, created by
+   sphinx-quickstart on Wed Sep  2 16:59:16 2020.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to TCPChan's documentation!
+===================================
+
+.. automodule:: tcpchan
+   :members:
+
+.. automodule:: tcpchan.core
+   :members:
+
+.. automodule:: tcpchan.aio
+   :members:
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
