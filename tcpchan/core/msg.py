@@ -1,4 +1,9 @@
-from fpack import Bytes, Message, Uint8, Uint32, field_factory
+from fpack import Bytes
+from fpack import Message
+from fpack import Uint8
+from fpack import Uint32
+from fpack import field_factory
+
 
 TCPCHAN_OP_HANDSHAKE_REQUEST = 1
 TCPCHAN_OP_HANDSHAKE_REPLY = 2

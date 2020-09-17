@@ -3,16 +3,20 @@
 import asyncio
 import logging
 
-from tcpchan.core.conn import ClientConnection, ServerConnection
-from tcpchan.core.evt import (ChannelClosed, ChannelCreated, DataTransmit,
-                              HandshakeFailed, HandshakeSuccess)
+from tcpchan.core.conn import ClientConnection
+from tcpchan.core.conn import ServerConnection
+from tcpchan.core.evt import ChannelClosed
+from tcpchan.core.evt import ChannelCreated
+from tcpchan.core.evt import DataTransmit
+from tcpchan.core.evt import HandshakeFailed
+from tcpchan.core.evt import HandshakeSuccess
 
 
 class TCPChanBaseProtocol(asyncio.Protocol):
     """ TCP Channel Base Protocol
 
         Base protocol for the TCPChannelServerProtocol and TCPChannelClientProtocol
-    
+
         Attributes:
             channel_factory (callable): a factory function to create new channel.
             logger (logging.Logger): optional, logging utility
@@ -68,7 +72,7 @@ class TCPChanBaseProtocol(asyncio.Protocol):
 
     def create_channel(self):
         """ Create new channel
-        
+
             Calling this method creates a logical transmssion channel, and
             send a channel creation request to the other end of the connection.
 
@@ -108,7 +112,7 @@ class TCPChanBaseProtocol(asyncio.Protocol):
 
 class TCPChanServerProtocol(TCPChanBaseProtocol):
     """ TCPChan Server Protocol
-        
+
         TCPChan protocol for server side.
 
         Attributes:

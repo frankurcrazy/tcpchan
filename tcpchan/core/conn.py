@@ -1,13 +1,20 @@
 import logging
+
 from io import BytesIO
 from random import randint
 
-from tcpchan.core.chan import Channel
-from tcpchan.core.evt import (ChannelClosed, ChannelCreated, DataTransmit,
-                              HandshakeFailed, HandshakeSuccess)
-from tcpchan.core.msg import (ChannelPayload, CloseChannelRequest,
-                              CreateChannelRequest, HandshakeReply,
-                              HandshakeRequest, TCPChanMessage)
+from tcpchan.core.evt import ChannelClosed
+from tcpchan.core.evt import ChannelCreated
+from tcpchan.core.evt import DataTransmit
+from tcpchan.core.evt import HandshakeFailed
+from tcpchan.core.evt import HandshakeSuccess
+from tcpchan.core.msg import ChannelPayload
+from tcpchan.core.msg import CloseChannelRequest
+from tcpchan.core.msg import CreateChannelRequest
+from tcpchan.core.msg import HandshakeReply
+from tcpchan.core.msg import HandshakeRequest
+from tcpchan.core.msg import TCPChanMessage
+
 
 CONN_STATE_IDLE = 0
 CONN_STATE_SETUP = 1
@@ -59,7 +66,7 @@ class BaseConnection:
 
     def data_received(self, data):
         """ Called when underlying connection recevied new packet
-            
+
             Arguments:
                 data (bytes, memoryview): new data
         """
@@ -124,7 +131,7 @@ class Connection(BaseConnection):
         self._state = CONN_STATE_ESTABLISHED
 
     def data_received(self, data):
-        """ Called on data reception from network 
+        """ Called on data reception from network
         """
         self._buf.write(data)
 
@@ -232,9 +239,7 @@ class Connection(BaseConnection):
 
         self._logger.debug("handshake succeeded, sending reply.")
         msg = HandshakeReply(Magic=self._magic)
-        self.add_events(
-            [DataTransmit(payload=msg.pack()), HandshakeSuccess(),]
-        )
+        self.add_events([DataTransmit(payload=msg.pack()), HandshakeSuccess()])
         self._state = CONN_STATE_HANDSHAKE_SUCCESS
 
     def _handle_handshake_reply(self, msg):

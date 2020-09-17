@@ -2,7 +2,7 @@
 
 """ TCPChan
 
-    A simple TCP multiplexing library 
+    A simple TCP multiplexing library
 """
 
 __version__ = "0.1.1"

@@ -3,21 +3,29 @@
 import logging
 import unittest
 
+
 try:
-    import tcpchan
+    import tcpchan  # noqa: F401
 except ImportError:
     import os
     import sys
 
     sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "..")))
-    import tcpchan
 
 from tcpchan.core.chan import Channel
-from tcpchan.core.conn import ClientConnection, Connection, ServerConnection
-from tcpchan.core.evt import (ChannelClosed, ChannelCreated, DataTransmit,
-                              HandshakeFailed, HandshakeSuccess)
-from tcpchan.core.msg import (CloseChannelRequest, CreateChannelRequest,
-                              HandshakeReply, HandshakeRequest, TCPChanMessage)
+from tcpchan.core.conn import ClientConnection
+from tcpchan.core.conn import Connection
+from tcpchan.core.conn import ServerConnection
+from tcpchan.core.evt import ChannelClosed
+from tcpchan.core.evt import ChannelCreated
+from tcpchan.core.evt import DataTransmit
+from tcpchan.core.evt import HandshakeFailed
+from tcpchan.core.evt import HandshakeSuccess
+from tcpchan.core.msg import CloseChannelRequest
+from tcpchan.core.msg import CreateChannelRequest
+from tcpchan.core.msg import HandshakeReply
+from tcpchan.core.msg import HandshakeRequest
+from tcpchan.core.msg import TCPChanMessage
 
 
 class TestTCPChanConnection(unittest.TestCase):
@@ -30,7 +38,7 @@ class TestTCPChanConnection(unittest.TestCase):
 
     def test_create_connection(self):
         try:
-            conn = Connection(lambda: Channel())
+            Connection(lambda: Channel())
         except Exception:
             self.fail("Failed creating connection instance with builtin channel.")
 

@@ -60,7 +60,7 @@ class Channel:
 
     def data_received(self, data):
         """ Called on reception of data
-            
+
             Arguments:
                 data (bytes): received data
         """

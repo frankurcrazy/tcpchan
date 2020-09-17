@@ -1,4 +1,5 @@
 import typing
+
 from dataclasses import dataclass
 
 
@@ -42,7 +43,7 @@ class DataTransmit(BaseEvent):
 @dataclass
 class ChannelClosed(BaseEvent):
     """ Channel Closed Event
-        
+
         The event is received when a specific channel is closed. The id of the closed
         channel is indicated in the ```channel_id``` field.
     """
@@ -53,7 +54,7 @@ class ChannelClosed(BaseEvent):
 @dataclass
 class ChannelCreated(BaseEvent):
     """ Channel Created Event
-        
+
         The event is received upon successful creation of a channel. The id of the created
         channel and the channel instance itself are indicated in the ```channel_id``` and ```channel``` field
         respectively..
