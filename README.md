@@ -21,7 +21,7 @@ pip install tcpchan
 #### Install latest version from GitHub
 ```basb
 git clone --depth 1 https://github.com/frankurcrazy/tcpchan
-cd tcpchan; python setup.py install
+cd tcpchan; pip install .
 ```
 
 #### Dependencies
