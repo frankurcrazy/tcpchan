@@ -22,3 +22,22 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: debug-statements
+
+  - repo: https://github.com/jumanjihouse/pre-commit-hooks
+    rev: master  # or specific git tag
+    hooks:
+      - id: markdownlint # Configure in .mdlrc
+    #- id: bundler-audit
+    #- id: check-mailmap
+    #- id: fasterer
+    #- id: forbid-binary
+    #- id: forbid-space-in-indent
+    #- id: git-check  # Configure in .gitattributes
+    #- id: git-dirty  # Configure in .gitignore
+    #- id: reek
+    #- id: require-ascii
+    #- id: rubocop
+    #- id: script-must-have-extension
+    #- id: script-must-not-have-extension
+    #- id: shellcheck
+    #- id: shfmt

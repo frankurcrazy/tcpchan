@@ -1,38 +1,51 @@
-TCPChan
-====
+# TCPChan
 
 [![PyPI version](https://badge.fury.io/py/tcpchan.svg)](https://badge.fury.io/py/tcpchan)
 
-***TCPChan*** is a TCP connection multiplexing library that enables working with multiple *channels* in a single TCP connection. TCPChan can boost the efficiency of the short-lived connections by eliminating the overhead of connection setup, especially in high-latency links (e.g. cross-continental links).
+***TCPChan*** is a TCP connection multiplexing library that enables working with
+multiple*channels* in a single TCP connection. TCPChan can boost the efficiency
+of the short-lived connections by eliminating the overhead of connection setup,
+especially in high-latency links (e.g. cross-continental links).
 
-The core part of the library is decoupled from I/O libraries so it's possible to bring your own I/O library. For convenience, an Asyncio-based protocol implementation is provided for easy integration with Asyncio applications.
+The core part of the library is decoupled from I/O libraries so it's possible to
+bring your own I/O library. For convenience, an Asyncio-based protocol
+implementation is provided for easy integration with Asyncio applications.
 
-Warning: TCPChan is built for fun and educational purpose, it is not fully tested, and neither is it widely deployed. Use it at your own risk.
+Warning: TCPChan is built for fun and educational purpose, it is not fully
+tested, and neither is it widely deployed. Use it at your own risk.
 
 ## Guide
+
 WIP
 
 ### Installation
+
 #### Install via Pip
+
 ```bash
 pip install tcpchan
 ```
 
 #### Install latest version from GitHub
+
 ```basb
 git clone --depth 1 https://github.com/frankurcrazy/tcpchan
 cd tcpchan; pip install .
 ```
 
 #### Dependencies
+
 1. python >= 3.7
 1. fpack >= 1.0.0
 
 ### Usage
+
 WIP
 
 #### Channel
+
 Inherit `tcpchan.core.chan.Channel` and implements `data_received` callback.
+
 ```python
 from tcpchan.core.chan import Channel
 
@@ -42,9 +55,12 @@ class CustomChannel(Channel):
 ```
 
 #### Connection
-Create `ServerConnection` or `ClientConnection` instance upon connection establishment in server/client. And pass the channel factory to the Connection.
+
+Create `ServerConnection` or `ClientConnection` instance upon connection
+establishment in server/client. And pass the channel factory to the Connection.
 
 ##### Server connection creation
+
 ```python
 from tcpchan.core.conn import ServerConnection
 
@@ -52,6 +68,7 @@ conn = ServerConnection(lambda: CustomChannel())
 ```
 
 ##### Client connection creation
+
 ```python
 from tcpchan.core.conn import ClientConnection
 
@@ -59,6 +76,7 @@ conn = ClientConnection(lambda: CustomChannel())
 ```
 
 #### Events
+
 ```python
 from tcpchan.core import (
     HandshakeSuccess, DataTransmit,
@@ -67,9 +85,12 @@ from tcpchan.core import (
 ```
 
 #### Asyncio
-TCPChan provides an Asyncio-based protocol implementation so that one can easily integrate TCPChan in their Asyncio applications.
 
-For server-side application, `TCPChanServerProtocol` can be used, likewise, for client-side application, `TCPChanClientProtocol` can be used.
+TCPChan provides an Asyncio-based protocol implementation so that one can
+easily integrate TCPChan in their Asyncio applications.
+
+For server-side application, `TCPChanServerProtocol` can be used, likewise,
+for client-side application, `TCPChanClientProtocol` can be used.
 
 ```python
 import asyncio
@@ -120,4 +141,5 @@ loop.run_forever()
 ```
 
 ## LICENSE
+
 BSD
