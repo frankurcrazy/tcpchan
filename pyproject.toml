@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "tcpchan"
+version = "0.1.2"
+description = "tcpchan is a TCP (de)multiplexer"
+authors = ["Frank Chang <frank@csie.io>"]
+license = "BSD-3-Clause"
+repository = "https://github.com/frankurcrazy/tcpchan"
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Operating System :: OS Independent",
+    "Topic :: Internet",
+    "Topic :: System :: Networking",
+]
+readme = "README.md"
+keywords=["tcp", "multiplexer", "mux", "stream", "channel"]
+
+[tool.poetry.dependencies]
+python = ">=3.7"
+fpack = ">=1.0.0"
+
+[tool.poetry.dev-dependencies]
+python-semantic-release = ">=7.2.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.semantic_release]
+version_variable = "tcpchan/__init__.py:__version__,pyproject.toml:version"
