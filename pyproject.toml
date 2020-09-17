@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tcpchan"
-version = "0.1.2"
+version = "0.1.1"
 description = "tcpchan is a TCP (de)multiplexer"
 authors = ["Frank Chang <frank@csie.io>"]
 license = "BSD-3-Clause"
